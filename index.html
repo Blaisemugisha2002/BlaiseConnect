@@ -222,7 +222,36 @@
   </button>
 </section>
     <div id="message" class="result" role="status"></div>
+<section class="card">
+  <h2>📅 Book an Appointment</h2>
+  <p>Request an appointment with an organization or legal aid provider.</p>
 
+  <label for="appointmentOrg">Choose Organization</label>
+  <select id="appointmentOrg">
+    <option value="">Select an organization</option>
+    <option value="UNHCR">UNHCR</option>
+    <option value="IRC">IRC</option>
+    <option value="JRS">JRS</option>
+    <option value="DRC">DRC</option>
+    <option value="Legal Aid">Legal Aid Provider</option>
+  </select>
+
+  <label for="appointmentDate">Choose Date</label>
+  <input type="date" id="appointmentDate">
+
+  <label for="appointmentTime">Choose Time</label>
+  <input type="time" id="appointmentTime">
+
+  <label for="appointmentReason">Reason for Appointment</label>
+  <textarea id="appointmentReason" rows="3"
+    placeholder="Explain why you need an appointment"></textarea>
+
+  <button type="button" onclick="requestAppointment()">
+    📩 Request Appointment
+  </button>
+
+  <div id="appointmentResult" class="result" role="status"></div>
+  </section>
   </main>
 
   <footer>
