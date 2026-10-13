@@ -305,7 +305,51 @@
     " on " + date + " at " + time +
     " is pending confirmation. This demo has not sent your request to the organization.";
       }
-  </script>
+function startVoiceInput() {
+  const voiceText = document.getElementById("voiceText");
+
+  if (!("webkitSpeechRecognition" in window) &&
+      !("SpeechRecognition" in window)) {
+    voiceText.value = "Voice input is not supported by this browser. Please type your message.";
+    return;
+  }
+
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+
+  recognition.onresult = function(event) {
+    voiceText.value = event.results[0][0].transcript;
+  };
+
+  recognition.onerror = function() {
+    voiceText.placeholder = "Voice input failed. Please try again or type your message.";
+  };
+
+  recognition.start();
+}
+
+function speakReply() {
+  const replyText = document.getElementById("replyText");
+  const text = replyText.value.trim();
+
+  if (!text) {
+    replyText.placeholder = "Please enter a reply to hear it spoken.";
+    return;
+  }
+
+  if (!("speechSynthesis" in window)) {
+    replyText.placeholder = "Speech playback is not supported by this browser.";
+    return;
+  }
+
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-US";
+  window.speechSynthesis.speak(speech);
+      </script>
 
 </body>
 </html>
