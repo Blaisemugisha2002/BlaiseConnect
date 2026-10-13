@@ -201,7 +201,26 @@
         password, and account recovery.
       </p>
     </section>
+<section class="card">
+  <h2>🎤 Voice Message</h2>
+  <p>You can speak instead of typing.</p>
 
+  <button type="button" onclick="startVoiceInput()">
+    🎤 Speak Your Message
+  </button>
+
+  <textarea id="voiceText" rows="4"
+    placeholder="Your message will appear here..."></textarea>
+
+  <p>When you receive a reply, you can listen to it here.</p>
+
+  <textarea id="replyText" rows="4"
+    placeholder="Organization reply will appear here..."></textarea>
+
+  <button type="button" onclick="speakReply()">
+    🔊 Listen to Reply
+  </button>
+</section>
     <div id="message" class="result" role="status"></div>
 
   </main>
