@@ -279,6 +279,32 @@
     function showMessage(message) {
       document.getElementById("message").textContent = message;
     }
+ function requestAppointment() {
+  const organization = document.getElementById("appointmentOrg").value;
+  const date = document.getElementById("appointmentDate").value;
+  const time = document.getElementById("appointmentTime").value;
+  const reason = document.getElementById("appointmentReason").value.trim();
+  const result = document.getElementById("appointmentResult");
+
+  if (!organization || !date || !time || !reason) {
+    result.textContent = "Please complete all fields.";
+    return;
+  }
+
+  const selectedDate = new Date(date + "T00:00:00");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (selectedDate < today) {
+    result.textContent = "Please choose today or a future date.";
+    return;
+  }
+
+  result.textContent =
+    "Your appointment request for " + organization +
+    " on " + date + " at " + time +
+    " is pending confirmation. This demo has not sent your request to the organization.";
+      }
   </script>
 
 </body>
