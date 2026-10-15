@@ -74,6 +74,11 @@
       border-radius: 8px;
       font-size: 16px;
       background: white;
+      color: #18352c;
+    }
+
+    textarea {
+      resize: vertical;
     }
 
     button {
@@ -134,32 +139,37 @@
 
     <section class="card">
       <h2>🌍 Find Help</h2>
-      <p>Select your location to begin.</p>
+      <p>Select your country and your current location.</p>
 
       <label for="country">Country</label>
-      <select id="country">
+      <select id="country" onchange="updateLocations('country','location')">
         <option value="">Choose your country</option>
-        <option>Kenya</option>
-        <option>Uganda</option>
-        <option>Tanzania</option>
-        <option>Rwanda</option>
-        <option>Burundi</option>
-        <option>South Sudan</option>
-        <option>Other</option>
+        <option value="Kenya">Kenya</option>
+        <option value="Uganda">Uganda</option>
+        <option value="Tanzania">Tanzania</option>
+        <option value="Rwanda">Rwanda</option>
+        <option value="Burundi">Burundi</option>
+        <option value="South Sudan">South Sudan</option>
+        <option value="Other">Other country</option>
       </select>
 
       <label for="location">Camp, settlement or city</label>
-      <input id="location" placeholder="Enter your location">
+      <select id="location">
+        <option value="">Choose your location</option>
+      </select>
 
-      <button onclick="findHelp()">Find Help</button>
-      <div id="helpResult" class="result"></div>
+      <label for="otherLocation">Or enter another location</label>
+      <input id="otherLocation" placeholder="Enter your camp or city">
+
+      <button type="button" onclick="findHelp()">Find Help</button>
+      <div id="helpResult" class="result" role="status"></div>
     </section>
 
     <section class="card">
       <h2>📋 My Cases</h2>
       <p>
-        In a future version, you will be able to follow
-        your requests and read replies from organizations.
+        In a future version, users will be able to follow
+        their requests and read replies from organizations.
       </p>
       <p class="notice">
         This is an early demonstration. No real case
@@ -173,7 +183,8 @@
         Find information about legal assistance and
         possible appointments with verified providers.
       </p>
-      <button class="secondary"
+
+      <button class="secondary" type="button"
         onclick="showMessage('Legal assistance information will appear here after verified providers are added.')">
         Explore Legal Help
       </button>
@@ -194,64 +205,99 @@
       <h2>🔐 Create Account / Login</h2>
       <p>
         Account registration and secure login will be
-        added in the next development stage.
+        added in a future development stage.
       </p>
       <p>
-        We will support email or phone number,
-        password, and account recovery.
+        The planned account system will support email
+        or phone number, password, and account recovery.
+      </p>
+      <p class="notice">
+        Account registration is not active in this demo.
       </p>
     </section>
-<section class="card">
-  <h2>🎤 Voice Message</h2>
-  <p>You can speak instead of typing.</p>
 
-  <button type="button" onclick="startVoiceInput()">
-    🎤 Speak Your Message
-  </button>
+    <section class="card">
+      <h2>🎤 Voice Message</h2>
+      <p>You can speak instead of typing when your browser supports voice input.</p>
 
-  <textarea id="voiceText" rows="4"
-    placeholder="Your message will appear here..."></textarea>
+      <button type="button" onclick="startVoiceInput()">
+        🎤 Speak Your Message
+      </button>
 
-  <p>When you receive a reply, you can listen to it here.</p>
+      <textarea id="voiceText" rows="4"
+        placeholder="Your spoken message will appear here. You can also type."></textarea>
 
-  <textarea id="replyText" rows="4"
-    placeholder="Organization reply will appear here..."></textarea>
+      <p>When a reply is available, you can listen to it here.</p>
 
-  <button type="button" onclick="speakReply()">
-    🔊 Listen to Reply
-  </button>
-</section>
+      <textarea id="replyText" rows="4"
+        placeholder="An organization reply can appear here in a future version."></textarea>
+
+      <button type="button" onclick="speakReply()">
+        🔊 Listen to Reply
+      </button>
+
+      <div id="voiceResult" class="result" role="status"></div>
+    </section>
+
+    <section class="card">
+      <h2>📅 Book an Appointment</h2>
+      <p>
+        Prepare an appointment request with an organization
+        or legal aid provider.
+      </p>
+
+      <label for="appointmentCountry">Country where you want the appointment</label>
+      <select id="appointmentCountry"
+        onchange="updateLocations('appointmentCountry','appointmentLocation')">
+        <option value="">Choose a country</option>
+        <option value="Kenya">Kenya</option>
+        <option value="Uganda">Uganda</option>
+        <option value="Tanzania">Tanzania</option>
+        <option value="Rwanda">Rwanda</option>
+        <option value="Burundi">Burundi</option>
+        <option value="South Sudan">South Sudan</option>
+        <option value="Other">Other country</option>
+      </select>
+
+      <label for="appointmentLocation">Camp, settlement or city for the appointment</label>
+      <select id="appointmentLocation">
+        <option value="">Choose your appointment location</option>
+      </select>
+
+      <label for="otherAppointmentLocation">Or enter another location</label>
+      <input id="otherAppointmentLocation"
+        placeholder="Enter the camp or city">
+
+      <label for="appointmentOrg">Choose Organization</label>
+      <select id="appointmentOrg">
+        <option value="">Select an organization</option>
+        <option value="UNHCR">UNHCR</option>
+        <option value="IRC">IRC</option>
+        <option value="JRS">JRS</option>
+        <option value="DRC">DRC</option>
+        <option value="Legal Aid Provider">Legal Aid Provider</option>
+        <option value="Other Organization">Other Organization</option>
+      </select>
+
+      <label for="appointmentDate">Preferred Date</label>
+      <input type="date" id="appointmentDate">
+
+      <label for="appointmentTime">Preferred Time</label>
+      <input type="time" id="appointmentTime">
+
+      <label for="appointmentReason">Reason for Appointment</label>
+      <textarea id="appointmentReason" rows="3"
+        placeholder="Explain why you need an appointment"></textarea>
+
+      <button type="button" onclick="requestAppointment()">
+        📩 Prepare Appointment Request
+      </button>
+
+      <div id="appointmentResult" class="result" role="status"></div>
+    </section>
+
     <div id="message" class="result" role="status"></div>
-<section class="card">
-  <h2>📅 Book an Appointment</h2>
-  <p>Request an appointment with an organization or legal aid provider.</p>
 
-  <label for="appointmentOrg">Choose Organization</label>
-  <select id="appointmentOrg">
-    <option value="">Select an organization</option>
-    <option value="UNHCR">UNHCR</option>
-    <option value="IRC">IRC</option>
-    <option value="JRS">JRS</option>
-    <option value="DRC">DRC</option>
-    <option value="Legal Aid">Legal Aid Provider</option>
-  </select>
-
-  <label for="appointmentDate">Choose Date</label>
-  <input type="date" id="appointmentDate">
-
-  <label for="appointmentTime">Choose Time</label>
-  <input type="time" id="appointmentTime">
-
-  <label for="appointmentReason">Reason for Appointment</label>
-  <textarea id="appointmentReason" rows="3"
-    placeholder="Explain why you need an appointment"></textarea>
-
-  <button type="button" onclick="requestAppointment()">
-    📩 Request Appointment
-  </button>
-
-  <div id="appointmentResult" class="result" role="status"></div>
-  </section>
   </main>
 
   <footer>
@@ -259,97 +305,229 @@
   </footer>
 
   <script>
+    const locationOptions = {
+      "Kenya": [
+        "Kakuma",
+        "Kalobeyei",
+        "Eldoret",
+        "Nairobi",
+        "Other location"
+      ],
+      "Uganda": [
+        "Nakivale",
+        "Bidi Bidi",
+        "Kampala",
+        "Other location"
+      ],
+      "Tanzania": [
+        "Nyarugusu",
+        "Nduta",
+        "Other location"
+      ],
+      "Rwanda": [
+        "Kigali",
+        "Mahama",
+        "Other location"
+      ],
+      "Burundi": [
+        "Bujumbura",
+        "Other location"
+      ],
+      "South Sudan": [
+        "Juba",
+        "Other location"
+      ],
+      "Other": [
+        "Other location"
+      ]
+    };
+
+    function updateLocations(countryId, locationId) {
+      const country = document.getElementById(countryId).value;
+      const locationSelect = document.getElementById(locationId);
+
+      locationSelect.innerHTML =
+        '<option value="">Choose your location</option>';
+
+      const options = locationOptions[country] || [];
+
+      options.forEach(function(location) {
+        const option = document.createElement("option");
+        option.value = location;
+        option.textContent = location;
+        locationSelect.appendChild(option);
+      });
+    }
+
+    function getChosenLocation(selectId, inputId) {
+      const selected = document.getElementById(selectId).value;
+      const typed = document.getElementById(inputId).value.trim();
+
+      if (typed) {
+        return typed;
+      }
+
+      return selected;
+    }
+
     function findHelp() {
       const country = document.getElementById("country").value;
-      const location = document.getElementById("location").value.trim();
+      const location = getChosenLocation("location", "otherLocation");
       const result = document.getElementById("helpResult");
 
       if (!country || !location) {
         result.textContent =
-          "Please choose your country and enter your location.";
+          "Please choose your country and camp or city.";
         return;
       }
 
       result.textContent =
-        "Your location: " + location + ", " + country +
-        ". Verified organizations will be listed here when available. " +
+        "Your selected location is " + location + ", " + country +
+        ". Verified organizations will appear here when partners are connected. " +
         "This demo has not sent your information anywhere.";
     }
 
     function showMessage(message) {
       document.getElementById("message").textContent = message;
     }
- function requestAppointment() {
-  const organization = document.getElementById("appointmentOrg").value;
-  const date = document.getElementById("appointmentDate").value;
-  const time = document.getElementById("appointmentTime").value;
-  const reason = document.getElementById("appointmentReason").value.trim();
-  const result = document.getElementById("appointmentResult");
 
-  if (!organization || !date || !time || !reason) {
-    result.textContent = "Please complete all fields.";
-    return;
-  }
+    function requestAppointment() {
+      const country =
+        document.getElementById("appointmentCountry").value;
 
-  const selectedDate = new Date(date + "T00:00:00");
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+      const location = getChosenLocation(
+        "appointmentLocation",
+        "otherAppointmentLocation"
+      );
 
-  if (selectedDate < today) {
-    result.textContent = "Please choose today or a future date.";
-    return;
-  }
+      const organization =
+        document.getElementById("appointmentOrg").value;
 
-  result.textContent =
-    "Your appointment request for " + organization +
-    " on " + date + " at " + time +
-    " is pending confirmation. This demo has not sent your request to the organization.";
+      const date =
+        document.getElementById("appointmentDate").value;
+
+      const time =
+        document.getElementById("appointmentTime").value;
+
+      const reason =
+        document.getElementById("appointmentReason").value.trim();
+
+      const result =
+        document.getElementById("appointmentResult");
+
+      if (!country || !location || !organization ||
+          !date || !time || !reason) {
+        result.textContent =
+          "Please complete every field, including the country and appointment location.";
+        return;
       }
-function startVoiceInput() {
-  const voiceText = document.getElementById("voiceText");
 
-  if (!("webkitSpeechRecognition" in window) &&
-      !("SpeechRecognition" in window)) {
-    voiceText.value = "Voice input is not supported by this browser. Please type your message.";
-    return;
-  }
+      const selectedDate = new Date(date + "T00:00:00");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (selectedDate < today) {
+        result.textContent =
+          "Please choose today or a future date.";
+        return;
+      }
 
-  const recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
+      result.textContent =
+        "Demo appointment request prepared. Organization: " +
+        organization + ". Location: " + location + ", " + country +
+        ". Preferred date: " + date + ". Preferred time: " + time +
+        ". Reason: " + reason +
+        ". Status: Not sent. The organization has not confirmed this appointment. " +
+        "This demo does not send requests to organizations.";
+    }
 
-  recognition.onresult = function(event) {
-    voiceText.value = event.results[0][0].transcript;
-  };
+    function startVoiceInput() {
+      const voiceText = document.getElementById("voiceText");
+      const voiceResult = document.getElementById("voiceResult");
 
-  recognition.onerror = function() {
-    voiceText.placeholder = "Voice input failed. Please try again or type your message.";
-  };
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  recognition.start();
-}
+      if (!SpeechRecognition) {
+        voiceResult.textContent =
+          "Voice input is not supported by this browser. Please type your message or try a supported browser.";
+        return;
+      }
 
-function speakReply() {
-  const replyText = document.getElementById("replyText");
-  const text = replyText.value.trim();
+      try {
+        const recognition = new SpeechRecognition();
 
-  if (!text) {
-    replyText.placeholder = "Please enter a reply to hear it spoken.";
-    return;
-  }
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
 
-  if (!("speechSynthesis" in window)) {
-    replyText.placeholder = "Speech playback is not supported by this browser.";
-    return;
-  }
+        voiceResult.textContent =
+          "Listening... Please speak clearly.";
 
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.lang = "en-US";
-  window.speechSynthesis.speak(speech);
-      </script>
+        recognition.onresult = function(event) {
+          const spokenText = event.results[0][0].transcript;
+          voiceText.value = voiceText.value
+            ? voiceText.value + " " + spokenText
+            : spokenText;
+
+          voiceResult.textContent =
+            "Your voice has been converted to text. Please review it before using it.";
+        };
+
+        recognition.onerror = function(event) {
+          voiceResult.textContent =
+            "Voice input could not start or finish (" +
+            event.error +
+            "). You can type your message instead.";
+        };
+
+        recognition.onend = function() {
+          if (voiceResult.textContent ===
+              "Listening... Please speak clearly.") {
+            voiceResult.textContent =
+              "Voice input ended. If no text appeared, please try again or type your message.";
+          }
+        };
+
+        recognition.start();
+      } catch (error) {
+        voiceResult.textContent =
+          "The microphone could not start in this browser. Please type your message or try again.";
+      }
+    }
+
+    function speakReply() {
+      const replyText = document.getElementById("replyText");
+      const voiceResult = document.getElementById("voiceResult");
+      const text = replyText.value.trim();
+
+      if (!text) {
+        voiceResult.textContent =
+          "There is no reply to read aloud yet. Enter text in the reply box first.";
+        return;
+      }
+
+      if (!("speechSynthesis" in window)) {
+        voiceResult.textContent =
+          "Reading replies aloud is not supported by this browser.";
+        return;
+      }
+
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = "en-US";
+
+      speech.onerror = function() {
+        voiceResult.textContent =
+          "The reply could not be read aloud on this device.";
+      };
+
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(speech);
+
+      voiceResult.textContent =
+        "Reading the reply aloud.";
+    }
+  </script>
 
 </body>
-</html>
+  </html>
