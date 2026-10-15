@@ -293,3 +293,54 @@ function renderNotices(){let a=read(K.notices).slice().reverse();$("announcement
 $("publishNotice").onclick=()=>{let o=getOrg($("orgSelect").value),t=$("noticeTitle").value.trim(),b=$("noticeBody").value.trim();if(!o||!t||!b){msg("orgStatus","Choose an organization and enter title and details.");return}let a=read(K.notices);a.push({orgId:o.id,orgName:o.name,title:t,body:b,createdAt:Date.now()});if(!write(K.notices,a)){msg("orgStatus","Could not save announcement.");return}$("noticeTitle").value="";$("noticeBody").value="";msg("orgStatus","Sample announcement saved on this device only, not sent to real users.");renderNotices()};
 function renderInbox(){let id=$("orgSelect").value,a=read(K.drafts).filter(d=>d.orgId===id).slice().reverse();$("orgInbox").innerHTML=a.length?a.map(d=>`<div class="item"><b>${esc(d.id)}</b><p>${esc(d.text)}</p><p>Reference: ${esc(d.caseNumber||"Not supplied")}</p></div>`).join(""):"<p>No local drafts for this sample organization.</p>"}
 $("orgSelect").onchange=renderInbox
+;
+
+// Legal Help demo
+$("saveLegal").onclick=()=>{
+  const location=$("legalLocation").value.trim();
+  const issue=$("legalIssue").value;
+  const details=$("legalDetails").value.trim();
+
+  if(!location||!details){
+    msg("legalStatus","Please enter your location and describe the help you need.");
+    return;
+  }
+
+  msg("legalStatus",
+    "Legal-help draft prepared on this device only. It has NOT been sent to a lawyer."
+  );
+};
+
+// Account demo
+$("accountContinue").onclick=()=>{
+  const email=$("accountEmail").value.trim();
+  const phone=$("accountPhone").value.trim();
+  const mode=$("accountMode").value;
+
+  if(!email&&!phone){
+    msg("accountStatus","Enter your email or phone number to continue.");
+    return;
+  }
+
+  if(mode==="forgot"){
+    msg("accountStatus",
+      "Password recovery requires a secure backend. No recovery message was sent."
+    );
+    return;
+  }
+
+  msg("accountStatus",
+    "Demo only: no account was created and no login was performed."
+  );
+};
+
+// Initial demo content
+$("stopVoice").disabled=true;
+renderDrafts();
+renderAppts();
+renderNotices();
+renderInbox();
+
+</script>
+</body>
+</html>
