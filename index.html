@@ -1,533 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#087f5b">
-  <title>BlaiseConnect</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f8f6;
-      color: #18352c;
-    }
-
-    header {
-      background: #087f5b;
-      color: white;
-      padding: 25px 18px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0 0 10px;
-      font-size: 29px;
-    }
-
-    header p {
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    main {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px 16px;
-    }
-
-    .welcome, .card {
-      background: white;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px #0000000d;
-    }
-
-    h2 {
-      color: #087f5b;
-      margin-top: 0;
-    }
-
-    .notice {
-      background: #e0f3e9;
-      padding: 13px;
-      border-radius: 9px;
-      line-height: 1.5;
-    }
-
-    label {
-      display: block;
-      margin: 14px 0 6px;
-      font-weight: bold;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #b9c9c1;
-      border-radius: 8px;
-      font-size: 16px;
-      background: white;
-      color: #18352c;
-    }
-
-    textarea {
-      resize: vertical;
-    }
-
-    button {
-      width: 100%;
-      border: none;
-      border-radius: 9px;
-      padding: 13px;
-      margin-top: 12px;
-      background: #087f5b;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button.secondary {
-      background: #e0f3e9;
-      color: #075b42;
-    }
-
-    .result {
-      margin-top: 12px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #53685e;
-      font-size: 13px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087f5b">
+<title>BlaiseConnect</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f8f6;color:#18352c;line-height:1.5}
+header{background:#087f5b;color:white;text-align:center;padding:22px 14px}
+header h1{margin:0;font-size:30px}
+main{max-width:850px;margin:auto;padding:14px}
+nav{display:flex;gap:6px;overflow-x:auto;background:white;padding:10px;position:sticky;top:0}
+button{border:0;border-radius:8px;padding:11px;margin:5px 0;background:#087f5b;color:white;font-weight:bold;cursor:pointer}
+nav button{white-space:nowrap;background:#e0f3e9;color:#075b42}
+input,select,textarea{width:100%;padding:11px;border:1px solid #b9c9c1;border-radius:8px;font:inherit;background:white;color:#18352c}
+label{display:block;font-weight:bold;margin:12px 0 5px}
+textarea{resize:vertical}
+.card{background:white;border-radius:13px;padding:17px;margin:13px 0;box-shadow:0 2px 8px #0000000d}
+h2{color:#087f5b;margin-top:0}
+.notice{background:#e0f3e9;padding:12px;border-radius:8px;margin:10px 0}
+.warning{background:#fff3d5;padding:12px;border-radius:8px;margin:10px 0}
+.panel{display:none}.panel.active{display:block}
+.result{margin-top:10px;overflow-wrap:anywhere}
+.item{border:1px solid #d9e8e1;border-radius:9px;padding:12px;margin:10px 0}
+.status{background:#f0f5f2;border-radius:8px;padding:10px;margin-top:10px;overflow-wrap:anywhere}
+.small{font-size:13px;color:#52675e}
+footer{text-align:center;padding:20px;font-size:13px}
+@media(min-width:600px){.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
+</style>
 </head>
-
 <body>
-
-  <header>
-    <h1>BlaiseConnect</h1>
-    <p>Connecting people with humanitarian assistance</p>
-  </header>
-
-  <main>
-
-    <section class="welcome">
-      <h2>Welcome to BlaiseConnect</h2>
-      <p>
-        Find assistance, learn about organizations,
-        and prepare your request for help.
-      </p>
-
-      <div class="notice">
-        <strong>Our mission</strong><br>
-        To help refugees and other people find reliable
-        information about humanitarian services.
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>🌍 Find Help</h2>
-      <p>Select your country and your current location.</p>
-
-      <label for="country">Country</label>
-      <select id="country" onchange="updateLocations('country','location')">
-        <option value="">Choose your country</option>
-        <option value="Kenya">Kenya</option>
-        <option value="Uganda">Uganda</option>
-        <option value="Tanzania">Tanzania</option>
-        <option value="Rwanda">Rwanda</option>
-        <option value="Burundi">Burundi</option>
-        <option value="South Sudan">South Sudan</option>
-        <option value="Other">Other country</option>
-      </select>
-
-      <label for="location">Camp, settlement or city</label>
-      <select id="location">
-        <option value="">Choose your location</option>
-      </select>
-
-      <label for="otherLocation">Or enter another location</label>
-      <input id="otherLocation" placeholder="Enter your camp or city">
-
-      <button type="button" onclick="findHelp()">Find Help</button>
-      <div id="helpResult" class="result" role="status"></div>
-    </section>
-
-    <section class="card">
-      <h2>📋 My Cases</h2>
-      <p>
-        In a future version, users will be able to follow
-        their requests and read replies from organizations.
-      </p>
-      <p class="notice">
-        This is an early demonstration. No real case
-        has been submitted.
-      </p>
-    </section>
-
-    <section class="card">
-      <h2>⚖️ Legal Help</h2>
-      <p>
-        Find information about legal assistance and
-        possible appointments with verified providers.
-      </p>
-
-      <button class="secondary" type="button"
-        onclick="showMessage('Legal assistance information will appear here after verified providers are added.')">
-        Explore Legal Help
-      </button>
-    </section>
-
-    <section class="card">
-      <h2>📢 Organization Announcements</h2>
-      <p>
-        Updates from organizations can appear here
-        when verified partners publish them.
-      </p>
-      <p class="notice">
-        No organizations have been connected yet.
-      </p>
-    </section>
-
-    <section class="card">
-      <h2>🔐 Create Account / Login</h2>
-      <p>
-        Account registration and secure login will be
-        added in a future development stage.
-      </p>
-      <p>
-        The planned account system will support email
-        or phone number, password, and account recovery.
-      </p>
-      <p class="notice">
-        Account registration is not active in this demo.
-      </p>
-    </section>
-
-    <section class="card">
-      <h2>🎤 Voice Message</h2>
-      <p>You can speak instead of typing when your browser supports voice input.</p>
-
-      <button type="button" onclick="startVoiceInput()">
-        🎤 Speak Your Message
-      </button>
-
-      <textarea id="voiceText" rows="4"
-        placeholder="Your spoken message will appear here. You can also type."></textarea>
-
-      <p>When a reply is available, you can listen to it here.</p>
-
-      <textarea id="replyText" rows="4"
-        placeholder="An organization reply can appear here in a future version."></textarea>
-
-      <button type="button" onclick="speakReply()">
-        🔊 Listen to Reply
-      </button>
-
-      <div id="voiceResult" class="result" role="status"></div>
-    </section>
-
-    <section class="card">
-      <h2>📅 Book an Appointment</h2>
-      <p>
-        Prepare an appointment request with an organization
-        or legal aid provider.
-      </p>
-
-      <label for="appointmentCountry">Country where you want the appointment</label>
-      <select id="appointmentCountry"
-        onchange="updateLocations('appointmentCountry','appointmentLocation')">
-        <option value="">Choose a country</option>
-        <option value="Kenya">Kenya</option>
-        <option value="Uganda">Uganda</option>
-        <option value="Tanzania">Tanzania</option>
-        <option value="Rwanda">Rwanda</option>
-        <option value="Burundi">Burundi</option>
-        <option value="South Sudan">South Sudan</option>
-        <option value="Other">Other country</option>
-      </select>
-
-      <label for="appointmentLocation">Camp, settlement or city for the appointment</label>
-      <select id="appointmentLocation">
-        <option value="">Choose your appointment location</option>
-      </select>
-
-      <label for="otherAppointmentLocation">Or enter another location</label>
-      <input id="otherAppointmentLocation"
-        placeholder="Enter the camp or city">
-
-      <label for="appointmentOrg">Choose Organization</label>
-      <select id="appointmentOrg">
-        <option value="">Select an organization</option>
-        <option value="UNHCR">UNHCR</option>
-        <option value="IRC">IRC</option>
-        <option value="JRS">JRS</option>
-        <option value="DRC">DRC</option>
-        <option value="Legal Aid Provider">Legal Aid Provider</option>
-        <option value="Other Organization">Other Organization</option>
-      </select>
-
-      <label for="appointmentDate">Preferred Date</label>
-      <input type="date" id="appointmentDate">
-
-      <label for="appointmentTime">Preferred Time</label>
-      <input type="time" id="appointmentTime">
-
-      <label for="appointmentReason">Reason for Appointment</label>
-      <textarea id="appointmentReason" rows="3"
-        placeholder="Explain why you need an appointment"></textarea>
-
-      <button type="button" onclick="requestAppointment()">
-        📩 Prepare Appointment Request
-      </button>
-
-      <div id="appointmentResult" class="result" role="status"></div>
-    </section>
-
-    <div id="message" class="result" role="status"></div>
-
-  </main>
-
-  <footer>
-    BlaiseConnect · Early Demo · Humanitarian Support
-  </footer>
-
-  <script>
-    const locationOptions = {
-      "Kenya": [
-        "Kakuma",
-        "Kalobeyei",
-        "Eldoret",
-        "Nairobi",
-        "Other location"
-      ],
-      "Uganda": [
-        "Nakivale",
-        "Bidi Bidi",
-        "Kampala",
-        "Other location"
-      ],
-      "Tanzania": [
-        "Nyarugusu",
-        "Nduta",
-        "Other location"
-      ],
-      "Rwanda": [
-        "Kigali",
-        "Mahama",
-        "Other location"
-      ],
-      "Burundi": [
-        "Bujumbura",
-        "Other location"
-      ],
-      "South Sudan": [
-        "Juba",
-        "Other location"
-      ],
-      "Other": [
-        "Other location"
-      ]
-    };
-
-    function updateLocations(countryId, locationId) {
-      const country = document.getElementById(countryId).value;
-      const locationSelect = document.getElementById(locationId);
-
-      locationSelect.innerHTML =
-        '<option value="">Choose your location</option>';
-
-      const options = locationOptions[country] || [];
-
-      options.forEach(function(location) {
-        const option = document.createElement("option");
-        option.value = location;
-        option.textContent = location;
-        locationSelect.appendChild(option);
-      });
-    }
-
-    function getChosenLocation(selectId, inputId) {
-      const selected = document.getElementById(selectId).value;
-      const typed = document.getElementById(inputId).value.trim();
-
-      if (typed) {
-        return typed;
-      }
-
-      return selected;
-    }
-
-    function findHelp() {
-      const country = document.getElementById("country").value;
-      const location = getChosenLocation("location", "otherLocation");
-      const result = document.getElementById("helpResult");
-
-      if (!country || !location) {
-        result.textContent =
-          "Please choose your country and camp or city.";
-        return;
-      }
-
-      result.textContent =
-        "Your selected location is " + location + ", " + country +
-        ". Verified organizations will appear here when partners are connected. " +
-        "This demo has not sent your information anywhere.";
-    }
-
-    function showMessage(message) {
-      document.getElementById("message").textContent = message;
-    }
-
-    function requestAppointment() {
-      const country =
-        document.getElementById("appointmentCountry").value;
-
-      const location = getChosenLocation(
-        "appointmentLocation",
-        "otherAppointmentLocation"
-      );
-
-      const organization =
-        document.getElementById("appointmentOrg").value;
-
-      const date =
-        document.getElementById("appointmentDate").value;
-
-      const time =
-        document.getElementById("appointmentTime").value;
-
-      const reason =
-        document.getElementById("appointmentReason").value.trim();
-
-      const result =
-        document.getElementById("appointmentResult");
-
-      if (!country || !location || !organization ||
-          !date || !time || !reason) {
-        result.textContent =
-          "Please complete every field, including the country and appointment location.";
-        return;
-      }
-
-      const selectedDate = new Date(date + "T00:00:00");
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      if (selectedDate < today) {
-        result.textContent =
-          "Please choose today or a future date.";
-        return;
-      }
-
-      result.textContent =
-        "Demo appointment request prepared. Organization: " +
-        organization + ". Location: " + location + ", " + country +
-        ". Preferred date: " + date + ". Preferred time: " + time +
-        ". Reason: " + reason +
-        ". Status: Not sent. The organization has not confirmed this appointment. " +
-        "This demo does not send requests to organizations.";
-    }
-
-    function startVoiceInput() {
-      const voiceText = document.getElementById("voiceText");
-      const voiceResult = document.getElementById("voiceResult");
-
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-
-      if (!SpeechRecognition) {
-        voiceResult.textContent =
-          "Voice input is not supported by this browser. Please type your message or try a supported browser.";
-        return;
-      }
-
-      try {
-        const recognition = new SpeechRecognition();
-
-        recognition.lang = "en-US";
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-
-        voiceResult.textContent =
-          "Listening... Please speak clearly.";
-
-        recognition.onresult = function(event) {
-          const spokenText = event.results[0][0].transcript;
-          voiceText.value = voiceText.value
-            ? voiceText.value + " " + spokenText
-            : spokenText;
-
-          voiceResult.textContent =
-            "Your voice has been converted to text. Please review it before using it.";
-        };
-
-        recognition.onerror = function(event) {
-          voiceResult.textContent =
-            "Voice input could not start or finish (" +
-            event.error +
-            "). You can type your message instead.";
-        };
-
-        recognition.onend = function() {
-          if (voiceResult.textContent ===
-              "Listening... Please speak clearly.") {
-            voiceResult.textContent =
-              "Voice input ended. If no text appeared, please try again or type your message.";
-          }
-        };
-
-        recognition.start();
-      } catch (error) {
-        voiceResult.textContent =
-          "The microphone could not start in this browser. Please type your message or try again.";
-      }
-    }
-
-    function speakReply() {
-      const replyText = document.getElementById("replyText");
-      const voiceResult = document.getElementById("voiceResult");
-      const text = replyText.value.trim();
-
-      if (!text) {
-        voiceResult.textContent =
-          "There is no reply to read aloud yet. Enter text in the reply box first.";
-        return;
-      }
-
-      if (!("speechSynthesis" in window)) {
-        voiceResult.textContent =
-          "Reading replies aloud is not supported by this browser.";
-        return;
-      }
-
-      const speech = new SpeechSynthesisUtterance(text);
-      speech.lang = "en-US";
-
-      speech.onerror = function() {
-        voiceResult.textContent =
-          "The reply could not be read aloud on this device.";
-      };
-
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(speech);
-
-      voiceResult.textContent =
-        "Reading the reply aloud.";
-    }
-  </script>
-
-</body>
-  </html>
+<header>
+<h1>BlaiseConnect</h1>
+<p>Connecting people with humanitarian assistance</p>
+<p>DEMO — not connected to real organizations</p>
+</header>
+
+<nav>
+<button data-tab="help">🌍 Find Help</button>
+<button data-tab="messages">✉️ Messages</button>
+<button data-tab="voice">🎤 Voice</button>
+<button data-tab="appointments">📅 Appointments</button>
+<button data-tab="announcements">📢 Announcements</button>
+<button data-tab="cases">📋 My Cases</button>
+<button data-tab="legal">⚖️ Legal Help</button>
+<button data-tab="account">🔐 Account</button>
+<button data-tab="org">Organization Demo</button>
+</nav>
+
+<main>
+<section id="help" class="panel active">
+<div class="card">
+<h2>Welcome to BlaiseConnect</h2>
+<p>Find humanitarian services and prepare requests for assistance.</p>
+<div class="notice">Our mission is to help refugees find information about humanitarian services.</div>
+</div>
+
+<div class="card">
+<h2>🌍 Find Help</h2>
+<p>Choose your country and location.</p>
+<div class="row">
+<div>
+<label>Country</label>
+<select id="country">
+<option value="">Choose country</option>
+<option>Kenya</option><option>Uganda</option><option>Tanzania</option>
+<option>Rwanda</option><option>Burundi</option><option>South Sudan</option><option>Other</option>
+</select>
+</div>
+<div>
+<label>Camp, settlement or city</label>
+<select id="location"><option value="">Choose location</option></select>
+</div>
+</div>
+<label>Or enter another location</label>
+<input id="otherLocation" placeholder="Enter your camp or city">
+<button id="findBtn">Find organizations</button>
+<div id="helpResult" class="result"></div>
+</div>
+</section>
+
+<section id="messages" class="panel">
+<div class="card">
+<h2>✉️ Contact an Organization</h2>
+<p class="small">Case/reference number is optional. Drafts are saved only in this browser and are not sent.</p>
+<label>Organization</label><select id="messageOrg"></select>
+<label>Case/reference number (optional)</label><input id="caseNumber" placeholder="Optional">
+<label>Your message</label><textarea id="messageText" rows="5" placeholder="Explain what help you need"></textarea>
+<button id="dictateMessage">🎤 Dictate message</button>
+<button id="saveMessage">Save demo draft</button>
+<div id="messageStatus" class="status">No message has been sent.</div>
+<div class="warning">Demo rule: after saving a draft, another draft to the same organization is blocked for 60 days unless a reply is marked in Organization Demo. This browser-only rule is not secure.</div>
+<h3>My draft history</h3><div id="draftHistory"></div>
+</div>
+</section>
+
+<section id="voice" class="panel">
+<div class="card">
+<h2>🎤 Voice Messages</h2>
+<p>Speak to turn your words into text, or listen to text aloud.</p>
+<label>Voice language</label>
+<select id="voiceLanguage">
+<option value="en-US">English</option>
+<option value="sw-KE">Kiswahili</option>
+<option value="rn-BI">Kirundi</option>
+<option value="fr-FR">Français</option>
+</select>
+<label>Text to recognize or read aloud</label>
+<textarea id="voiceText" rows="5" placeholder="Tap Start Listening, or type here"></textarea>
+<button id="startVoice">🎤 Start Listening</button>
+<button id="stopVoice">Stop Listening</button>
+<button id="speakVoice">🔊 Read Aloud</button>
+<button id="copyVoice">Copy text to message</button>
+<div id="voiceStatus" class="status">Ready. Allow microphone access if asked.</div>
+<div class="notice">If the microphone fails, use Chrome, allow microphone access, check internet and reload the HTTPS page. If unsupported, use your phone keyboard microphone.</div>
+<label>Organization reply text (demo)</label>
+<textarea id="replyText" rows="3" placeholder="Replies will be connected in a future version"></textarea>
+<button id="speakReply">🔊 Listen to Reply</button>
+</div>
+</section>
+
+<section id="appointments" class="panel">
+<div class="card">
+<h2>📅 Request an Appointment</h2>
+<p>A provider must confirm availability and accept the request before it is booked.</p>
+<div class="row">
+<div><label>Country</label><select id="apptCountry">
+<option>Kenya</option><option>Uganda</option><option>Tanzania</option>
+<option>Rwanda</option><option>Burundi</option><option>South Sudan</option><option>Other</option>
+</select></div>
+<div><label>Camp or city</label><select id="apptLocation"></select></div>
+</div>
+<label>Or enter another location</label><input id="apptOtherLocation">
+<label>Organization or legal-aid provider</label><select id="apptOrg"></select>
+<div class="row">
+<div><label>Preferred date</label><input id="apptDate" type="date"></div>
+<div><label>Preferred time</label><input id="apptTime" type="time"></div>
+</div>
+<label>Reason for appointment</label><textarea id="apptReason" rows="3"></textarea>
+<button id="saveAppt">Save appointment request draft</button>
+<div id="apptStatus" class="status">Not sent. No appointment is booked.</div>
+<h3>My appointment drafts</h3><div id="apptHistory"></div>
+</div>
+</section>
+
+<section id="announcements" class="panel">
+<div class="card"><h2>📢 Organization Announcements</h2>
+<p>Only verified organizations should publish real announcements.</p>
+<div id="announcementList"></div>
+</div>
+</section>
+
+<section id="cases" class="panel">
+<div class="card"><h2>📋 My Cases</h2>
+<p>Future feature: follow case references and updates from connected organizations.</p>
+<div class="notice">No real cases have been submitted in this demo. Do not enter sensitive case information here.</div>
+</div>
+</section>
+
+<section id="legal" class="panel">
+<div class="card"><h2>⚖️ Legal Help</h2>
+<label>Country or location</label><input id="legalLocation" placeholder="e.g. Kenya — Kakuma">
+<label>Type of legal help</label>
+<select id="legalIssue">
+<option>Refugee documentation</option><option>Family protection</option>
+<option>Housing or basic services</option><option>Legal representation</option><option>Other</option>
+</select>
+<label>Short description</label><textarea id="legalDetails" rows="4"></textarea>
+<button id="legalDictate">🎤 Dictate description</button>
+<button id="saveLegal">Prepare legal-help draft</button>
+<div id="legalStatus" class="status">Not sent to a lawyer.</div>
+</div>
+</section>
+
+<section id="account" class="panel">
+<div class="card">
+<h2>🔐 Create Account / Login</h2>
+<div class="warning">Demo only: no account is created, no password is collected, and no email or SMS is sent. Secure accounts require a backend.</div>
+<label>Choose option</label><select id="accountMode">
+<option value="signup">Create account</option><option value="login">Log in</option><option value="forgot">Forgot password</option>
+</select>
+<div class="row"><div><label>Email</label><input id="accountEmail" type="email" placeholder="name@example.com"></div>
+<div><label>Phone number</label><input id="accountPhone" type="tel" placeholder="+254..."></div></div>
+<div class="row"><div><label>Country</label><select id="accountCountry">
+<option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Burundi</option><option>South Sudan</option><option>Other</option>
+</select></div><div><label>Camp or city</label><select id="accountLocation"></select></div></div>
+<button id="accountContinue">Continue demo</button>
+<div id="accountStatus" class="status">Never enter your real password in this demo.</div>
+</div>
+</section>
+
+<section id="org" class="panel">
+<div class="card">
+<h2>Organization Dashboard — Preview</h2>
+<p>Real organizations will need separate verified accounts. This is only a local demo.</p>
+<label>Organization</label><select id="orgSelect"></select>
+<h3>Publish sample announcement</h3>
+<label>Title</label><input id="noticeTitle">
+<label>Details</label><textarea id="noticeBody" rows="3"></textarea>
+<button id="publishNotice">Publish sample announcement</button>
+<div id="orgStatus" class="status"></div>
+<h3>Draft messages for this organization</h3><div id="orgInbox"></div>
+<label>Message draft ID to mark as replied</label><input id="replyId" placeholder="MSG-...">
+<button id="markReply">Mark as replied (demo)</button>
+</div>
+</section>
+</main>
+
+<footer>BlaiseConnect · Early demo · Humanitarian support</footer>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const locations={
+"Kenya":["Kakuma 1","Kakuma 2","Kakuma 3","Kakuma 4","Kalobeyei","Eldoret","Nairobi","Other location"],
+"Uganda":["Nakivale","Bidi Bidi","Kyaka II","Kampala","Other location"],
+"Tanzania":["Nyarugusu","Nduta","Dar es Salaam","Other location"],
+"Rwanda":["Kigali","Mahama","Other location"],
+"Burundi":["Bujumbura","Ngozi","Other location"],
+"South Sudan":["Juba","Other location"],"Other":["Other location"]
+};
+const orgs=[
+{id:"demo-general",name:"Sample Refugee Support Desk",services:"General humanitarian information and referral guidance (fictional demo)."},
+{id:"demo-legal",name:"Sample Legal Aid Desk",services:"Legal information and legal-aid referral guidance (fictional demo)."},
+{id:"demo-health",name:"Sample Health Referral Desk",services:"Health referral information only; not medical care (fictional demo)."}
+];
+const K={drafts:"bc_drafts_v4",replies:"bc_replies_v4",appts:"bc_appts_v4",notices:"bc_notices_v4"};
+function read(k){try{let a=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
+function write(k,a){try{localStorage.setItem(k,JSON.stringify(a));return true}catch(e){return false}}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function msg(id,t){$(id).textContent=t}
+function fillLocations(countryId,locId){let c=$(countryId).value,el=$(locId),old=el.value;el.innerHTML='<option value="">Choose location</option>'+(locations[c]||[]).map(x=>`<option>${esc(x)}</option>`).join("");if([...el.options].some(o=>o.value===old))el.value=old}
+function chosen(selectId,inputId){return $(inputId).value.trim()||$(selectId).value}
+function fillOrgs(id,blank=true){$(id).innerHTML=(blank?'<option value="">Choose an organization</option>':'')+orgs.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join("")}
+function getOrg(id){return orgs.find(o=>o.id===id)}
+function tab(id){document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll("nav button").forEach(b=>{b.style.background=b.dataset.tab===id?"#087f5b":"#e0f3e9";b.style.color=b.dataset.tab===id?"white":"#075b42"});if(id==="messages")renderDrafts();if(id==="appointments")renderAppts();if(id==="announcements")renderNotices();if(id==="org")renderInbox()}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+[["country","location"],["apptCountry","apptLocation"],["accountCountry","accountLocation"]].forEach(([c,l])=>{$(c).onchange=()=>fillLocations(c,l);fillLocations(c,l)});
+fillOrgs("messageOrg");fillOrgs("apptOrg");fillOrgs("orgSelect",false);
+$("findBtn").onclick=()=>{
+let c=$("country").value,l=chosen("location","otherLocation");
+if(!c||!l){$("helpResult").textContent="Please choose a country and location.";return}
+$("helpResult").innerHTML=`<p>Selected: <b>${esc(l)}, ${esc(c)}</b>. The following are fictional examples, not verified organizations.</p>`+orgs.map(o=>`<div class="item"><b>${esc(o.name)}</b><p>${esc(o.services)}</p><button data-msg="${o.id}">Contact / request help</button><button class="secondary" data-appt="${o.id}">Request appointment</button></div>`).join("");
+$("helpResult").querySelectorAll("[data-msg]").forEach(b=>b.onclick=()=>{$("messageOrg").value=b.dataset.msg;tab("messages")});
+$("helpResult").querySelectorAll("[data-appt]").forEach(b=>b.onclick=()=>{$("apptOrg").value=b.dataset.appt;tab("appointments")});
+};
+function remaining(id){let a=read(K.drafts).filter(d=>d.orgId===id);if(!a.length)return 0;let last=a.reduce((x,y)=>x.createdAt>y.createdAt?x:y);if(read(K.replies).some(r=>r.draftId===last.id))return 0;return Math.max(0,60*86400000-(Date.now()-last.createdAt))}
+$("saveMessage").onclick=()=>{
+let o=getOrg($("messageOrg").value),text=$("messageText").value.trim();
+if(!o||!text){msg("messageStatus","Choose an organization and write a message.");return}
+let left=remaining(o.id);if(left>0){msg("messageStatus",`Demo rule: wait about ${Math.ceil(left/86400000)} more days, unless a reply is marked. This local rule is not secure.`);return}
+let d={id:"MSG-"+Date.now().toString(36).toUpperCase(),orgId:o.id,orgName:o.name,caseNumber:$("caseNumber").value.trim(),text,createdAt:Date.now(),state:"Draft only — not sent"};
+let a=read(K.drafts);a.push(d);if(!write(K.drafts,a)){msg("messageStatus","Could not save this draft.");return}
+$("messageText").value="";msg("messageStatus",`Draft ${d.id} saved on this device. It was NOT sent.`);renderDrafts();
+};
+function renderDrafts(){let a=read(K.drafts).slice().reverse();$("draftHistory").innerHTML=a.length?a.map(d=>`<div class="item"><b>${esc(d.orgName)}</b><p>${esc(d.id)} · ${new Date(d.createdAt).toLocaleString()}</p><p>${esc(d.text)}</p>${d.caseNumber?`<p>Reference: ${esc(d.caseNumber)}</p>`:""}<span>${esc(d.state)}</span></div>`).join(""):"<p>No drafts saved on this device.</p>"}
+let recognition=null;
+function startVoice(target,statusId){
+const API=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!API){msg(statusId,"Speech recognition is unsupported here. Try Chrome on Android or use the phone keyboard microphone.");return}
+if(!window.isSecureContext){msg(statusId,"Voice recognition usually requires HTTPS. Open the published GitHub Pages site.");return}
+try{
+if(recognition){try{recognition.abort()}catch(e){}}
+recognition=new API();recognition.lang=$("voiceLanguage").value;recognition.continuous=true;recognition.interimResults=true;
+let finalText=$(target).value.trim();
+recognition.onstart=()=>{msg(statusId,"Listening… speak clearly. Press Stop when finished.");$("stopVoice").disabled=false};
+recognition.onresult=e=>{let interim="";for(let i=e.resultIndex;i<e.results.length;i++){let t=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=(finalText?" ":"")+t;else interim+=t}$(target).value=finalText+(interim?" "+interim:"")};
+recognition.onerror=e=>{let t="Voice error: "+e.error+".";if(e.error==="not-allowed")t+=" Allow microphone access in browser settings.";if(e.error==="network")t+=" Check your internet connection.";if(e.error==="no-speech")t+=" No speech detected; try again.";msg(statusId,t)};
+recognition.onend=()=>{$("stopVoice").disabled=true;if($(statusId).textContent.startsWith("Listening"))msg(statusId,"Listening stopped. You can edit the text or start again.")};
+recognition.start();
+}catch(e){msg(statusId,"Could not start microphone. Allow permission, close other microphone apps and try again.")}
+}
+$("startVoice").onclick=()=>startVoice("voiceText","voiceStatus");
+$("stopVoice").onclick=()=>{if(recognition){try{recognition.stop()}catch(e){}}};
+$("dictateMessage").onclick=()=>{tab("voice");$("voiceText").value=$("messageText").value;startVoice("voiceText","voiceStatus")};
+$("legalDictate").onclick=()=>{tab("voice");$("voiceText").value=$("legalDetails").value;startVoice("voiceText","voiceStatus")};
+function speak(text){if(!("speechSynthesis"in window)){msg("voiceStatus","Read-aloud is not supported by this browser.");return}if(!text.trim()){msg("voiceStatus","There is no text to read aloud.");return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang=$("voiceLanguage").value;u.onstart=()=>msg("voiceStatus","Reading aloud…");u.onend=()=>msg("voiceStatus","Finished reading.");u.onerror=()=>msg("voiceStatus","Could not read aloud on this device.");speechSynthesis.speak(u)}
+$("speakVoice").onclick=()=>speak($("voiceText").value);
+$("speakReply").onclick=()=>speak($("replyText").value);
+$("copyVoice").onclick=()=>{let t=$("voiceText").value.trim();if(!t){msg("voiceStatus","No voice text to copy.");return}$("messageText").value=t;tab("messages");msg("messageStatus","Voice text copied into message. Choose an organization before saving.")};
+$("saveAppt").onclick=()=>{
+let c=$("apptCountry").value,l=chosen("apptLocation","apptOtherLocation"),o=getOrg($("apptOrg").value),d=$("apptDate").value,t=$("apptTime").value,r=$("apptReason").value.trim();
+if(!c||!l||!o||!d||!t||!r){msg("apptStatus","Complete all fields.");return}
+if(d<new Date().toISOString().slice(0,10)){msg("apptStatus","Choose today or a future date.");return}
+let a=read(K.appts);a.push({id:"APT-"+Date.now().toString(36).toUpperCase(),orgName:o.name,country:c,location:l,date:d,time:t,reason:r,createdAt:Date.now()});
+if(!write(K.appts,a)){msg("apptStatus","Could not save draft.");return}
+$("apptReason").value="";msg("apptStatus","Request draft saved on this device only. NOT sent and NOT booked. A real provider must confirm it.");renderAppts();
+};
+function renderAppts(){let a=read(K.appts).slice().reverse();$("apptHistory").innerHTML=a.length?a.map(x=>`<div class="item"><b>${esc(x.orgName)}</b><p>${esc(x.country)} — ${esc(x.location)}</p><p>Preferred: ${esc(x.date)} ${esc(x.time)}</p><p>${esc(x.reason)}</p><b>Draft only — not booked</b></div>`).join(""):"<p>No appointment drafts saved.</p>"}
+function renderNotices(){let a=read(K.notices).slice().reverse();$("announcementList").innerHTML=a.length?a.map(n=>`<div class="item"><b>${esc(n.title)}</b><p>${esc(n.body)}</p><p class="small">SAMPLE / UNVERIFIED · ${esc(n.orgName)}</p></div>`).join(""):"<p>No demo announcements yet.</p>"}
+$("publishNotice").onclick=()=>{let o=getOrg($("orgSelect").value),t=$("noticeTitle").value.trim(),b=$("noticeBody").value.trim();if(!o||!t||!b){msg("orgStatus","Choose an organization and enter title and details.");return}let a=read(K.notices);a.push({orgId:o.id,orgName:o.name,title:t,body:b,createdAt:Date.now()});if(!write(K.notices,a)){msg("orgStatus","Could not save announcement.");return}$("noticeTitle").value="";$("noticeBody").value="";msg("orgStatus","Sample announcement saved on this device only, not sent to real users.");renderNotices()};
+function renderInbox(){let id=$("orgSelect").value,a=read(K.drafts).filter(d=>d.orgId===id).slice().reverse();$("orgInbox").innerHTML=a.length?a.map(d=>`<div class="item"><b>${esc(d.id)}</b><p>${esc(d.text)}</p><p>Reference: ${esc(d.caseNumber||"Not supplied")}</p></div>`).join(""):"<p>No local drafts for this sample organization.</p>"}
+$("orgSelect").onchange=renderInbox
