@@ -311,27 +311,110 @@ $("saveLegal").onclick=()=>{
   );
 };
 
-// Account demo
-$("accountContinue").onclick=()=>{
-  const email=$("accountEmail").value.trim();
-  const phone=$("accountPhone").value.trim();
-  const mode=$("accountMode").value;
+// Account: Supabase authentication
+$("accountContinue").onclick = async () => {
+  const email = $("accountEmail").value.trim();
+  const mode = $("accountMode").value;
+  const status = $("accountStatus");
 
-  if(!email&&!phone){
-    msg("accountStatus","Enter your email or phone number to continue.");
+  if (!email) {
+    msg("accountStatus", "Please enter your email address.");
     return;
   }
 
-  if(mode==="forgot"){
-    msg("accountStatus",
-      "Password recovery requires a secure backend. No recovery message was sent."
+  try {
+    if (!window.supabase) {
+      msg("accountStatus", "Loading secure account service...");
+
+      await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src =
+          "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    const client = window.supabase.createClient(
+      "https://vwfvpzgcdedwetzdhnth.supabase.co",
+      sb_publishable_O0xskOrGLgr_0O8qTky3Iw_L6B7RZT0
     );
-    return;
-  }
 
-  msg("accountStatus",
-    "Demo only: no account was created and no login was performed."
-  );
+    if (mode === "forgot") {
+      const { error } =
+        await client.auth.resetPasswordForEmail(email, {
+          redirectTo:
+            "https://blaisemugisha2002.github.io/BlaiseConnect/"
+        });
+
+      if (error) throw error;
+
+      msg(
+        "accountStatus",
+        "If your email is registered, password reset instructions will be sent."
+      );
+      return;
+    }
+
+    const password = prompt(
+      mode === "login"
+        ? "Enter your password to log in:"
+        : "Create a password with at least 8 characters:"
+    );
+
+    if (password === null) return;
+
+    if (password.length < 8) {
+      msg(
+        "accountStatus",
+        "Your password must contain at least 8 characters."
+      );
+      return;
+    }
+
+    msg("accountStatus", "Please wait...");
+
+    let result;
+
+    if (mode === "login") {
+      result = await client.auth.signInWithPassword({
+        email,
+        password
+      });
+    } else {
+      result = await client.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo:
+            "https://blaisemugisha2002.github.io/BlaiseConnect/"
+        }
+      });
+    }
+
+    if (result.error) throw result.error;
+
+    if (mode === "login") {
+      msg(
+        "accountStatus",
+        "Login successful!"
+      );
+    } else if (result.data.session) {
+      msg(
+        "accountStatus",
+        "Account created successfully!"
+      );
+    } else {
+      msg(
+        "accountStatus",
+        "Account created. Please check your email to confirm it."
+      );
+    }
+
+  } catch (error) {
+    msg("accountStatus", "Account error: " + error.message);
+  }
 };
 
 // Initial demo content
