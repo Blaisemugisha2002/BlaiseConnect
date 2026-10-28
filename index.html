@@ -425,12 +425,19 @@ renderAppts();
 renderNotices();
 renderInbox();
 $("logoutButton").onclick = async () => {
-  const { error } = await client.auth.signOut();
-  if (error) {
-    alert("Logout failed: " + error.message);
-    return;
+  try {
+    const { error } = await client.auth.signOut();
+
+    if (error) {
+      alert("Logout failed: " + error.message);
+      return;
+    }
+
+    alert("Wasohotse muri konti neza.");
+    location.reload();
+  } catch (error) {
+    alert("Logout error: " + error.message);
   }
-  location.reload();
 };
 </script>
 </body>
