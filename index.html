@@ -188,6 +188,7 @@ footer{text-align:center;padding:20px;font-size:13px}
 </select></div><div><label>Camp or city</label><select id="accountLocation"></select></div></div>
 <button id="accountContinue">Continue demo</button>
 <div id="accountStatus" class="status">Never enter your real password in this demo.</div>
+  <button id="logoutButton">Logout</button>
 </div>
 </section>
 
@@ -423,7 +424,14 @@ renderDrafts();
 renderAppts();
 renderNotices();
 renderInbox();
-
+$("logoutButton").onclick = async () => {
+  const { error } = await client.auth.signOut();
+  if (error) {
+    alert("Logout failed: " + error.message);
+    return;
+  }
+  location.reload();
+};
 </script>
 </body>
 </html>
