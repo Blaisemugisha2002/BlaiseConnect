@@ -426,6 +426,16 @@ renderNotices();
 renderInbox();
 $("logoutButton").onclick = async () => {
   try {
+    if (!window.supabase) {
+      alert("Supabase ntiriko irakora. Ongera ufungure urubuga.");
+      return;
+    }
+
+    const client = window.supabase.createClient(
+      "https://vwfvpzgcdedwetzdhnth.supabase.co",
+      "sb_publishable_O0xskOrGLgr_0O8qTky3Iw_L6B7RZT0"
+    );
+
     const { error } = await client.auth.signOut();
 
     if (error) {
