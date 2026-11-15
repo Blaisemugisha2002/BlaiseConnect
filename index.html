@@ -214,6 +214,32 @@ footer{text-align:center;padding:20px;font-size:13px}
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
+  let supabaseClient = null;
+let supabaseLoading = null;
+
+async function getSupabaseClient() {
+  if (supabaseClient) return supabaseClient;
+
+  if (!window.supabase) {
+    if (!supabaseLoading) {
+      supabaseLoading = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+    await supabaseLoading;
+  }
+
+  supabaseClient = window.supabase.createClient(
+    "https://vwfvpzgcdedwetzdhnth.supabase.co",
+    "sb_publishable_O0xskOrGLgr_0O8qTky3Iw_L6B7RZT0"
+  );
+
+  return supabaseClient;
+  }
 const locations={
 "Kenya":["Kakuma 1","Kakuma 2","Kakuma 3","Kakuma 4","Kalobeyei","Eldoret","Nairobi","Other location"],
 "Uganda":["Nakivale","Bidi Bidi","Kyaka II","Kampala","Other location"],
@@ -324,23 +350,7 @@ $("accountContinue").onclick = async () => {
   }
 
   try {
-    if (!window.supabase) {
-      msg("accountStatus", "Loading secure account service...");
-
-      await new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src =
-          "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    }
-
-    const client = window.supabase.createClient(
-  "https://vwfvpzgcdedwetzdhnth.supabase.co",
-  "sb_publishable_O0xskOrGLgr_0O8qTky3Iw_L6B7RZT0"
-);
+    const client = await getSupabaseClient();
 
     if (mode === "forgot") {
       const { error } =
@@ -426,22 +436,10 @@ renderNotices();
 renderInbox();
 $("logoutButton").onclick = async () => {
   try {
-    if (!window.supabase) {
-      alert("Supabase ntiriko irakora. Ongera ufungure urubuga.");
-      return;
-    }
-
-    const client = window.supabase.createClient(
-      "https://vwfvpzgcdedwetzdhnth.supabase.co",
-      "sb_publishable_O0xskOrGLgr_0O8qTky3Iw_L6B7RZT0"
-    );
-
+    const client = await getSupabaseClient();
     const { error } = await client.auth.signOut();
 
-    if (error) {
-      alert("Logout failed: " + error.message);
-      return;
-    }
+    if (error) throw error;
 
     alert("Wasohotse muri konti neza.");
     location.reload();
