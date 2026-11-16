@@ -181,6 +181,10 @@ footer{text-align:center;padding:20px;font-size:13px}
 <label>Choose option</label><select id="accountMode">
 <option value="signup">Create account</option><option value="login">Log in</option><option value="forgot">Forgot password</option>
 </select>
+  <div id="accountNameWrap">
+  <label>Full name</label>
+  <input id="accountFullName" type="text" placeholder="Enter your full name">
+  </div>
 <div class="row"><div><label>Email</label><input id="accountEmail" type="email" placeholder="name@example.com"></div>
 <div><label>Phone number</label><input id="accountPhone" type="tel" placeholder="+254..."></div></div>
 <div class="row"><div><label>Country</label><select id="accountCountry">
@@ -337,7 +341,19 @@ $("saveLegal").onclick=()=>{
     "Legal-help draft prepared on this device only. It has NOT been sent to a lawyer."
   );
 };
+function updateAccountNameVisibility() {
+  const mode = $("accountMode").value;
 
+  $("accountNameWrap").style.display =
+    mode === "signup" ? "block" : "none";
+}
+
+$("accountMode").addEventListener(
+  "change",
+  updateAccountNameVisibility
+);
+
+updateAccountNameVisibility();
 // Account: Supabase authentication
 $("accountContinue").onclick = async () => {
   const email = $("accountEmail").value.trim();
