@@ -411,13 +411,19 @@ $("accountContinue").onclick = async () => {
       });
     } else {
       result = await client.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo:
-            "https://blaisemugisha2002.github.io/BlaiseConnect/"
-        }
-      });
+  email,
+  password,
+  options: {
+    emailRedirectTo:
+      "https://blaisemugisha2002.github.io/BlaiseConnect/",
+    data: {
+      full_name: fullName,
+      phone: phone,
+      country: country,
+      location: location
+    }
+  }
+});
     }
 
     if (result.error) throw result.error;
