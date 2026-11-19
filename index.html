@@ -359,7 +359,10 @@ $("accountContinue").onclick = async () => {
   const email = $("accountEmail").value.trim();
   const mode = $("accountMode").value;
   const status = $("accountStatus");
-
+const fullName = $("accountFullName").value.trim();
+const phone = $("accountPhone").value.trim();
+const country = $("accountCountry").value;
+const location = $("accountLocation").value;
   if (!email) {
     msg("accountStatus", "Please enter your email address.");
     return;
