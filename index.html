@@ -430,7 +430,22 @@ const location = $("accountLocation").value;
     }
 
     if (result.error) throw result.error;
+if (mode === "login") {
+  const { data: profile, error: profileError } = await client
+    .from("profiles")
+    .select("full_name, phone, country, location")
+    .eq("id", result.data.user.id)
+    .maybeSingle();
 
+  if (profileError) throw profileError;
+
+  if (profile) {
+    $("accountFullName").value = profile.full_name || "";
+    $("accountPhone").value = profile.phone || "";
+    $("accountCountry").value = profile.country || "";
+    $("accountLocation").value = profile.location || "";
+  }
+  }
     if (mode === "login") {
       msg(
         "accountStatus",
